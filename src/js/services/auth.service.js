@@ -10,7 +10,7 @@ export class AuthService {
     }
 
     get isSubscribed() {
-      return false;
+      return true;
     }
 
     login(email, password) {

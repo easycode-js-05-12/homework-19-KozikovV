@@ -15,7 +15,7 @@ export class WinnersComponent {
         this._winers.forEach((winner) => this._winnerView(winner));
     }
     render() {
-        return `<div>${this._winersTemplate}</div>`;
+        return `<div class="row">${this._winersTemplate}</div>`;
     }
     afterRender() {
         
@@ -23,8 +23,10 @@ export class WinnersComponent {
 
     _winnerView(winner) {
         return this._winersTemplate += `
-            <div>
-                <img src="${winner.member_id.images[0].image_basic.url}" alt="winner">
+            <div class="col-4">
+                <div class="card" style="margin: 5px">
+                    <img src="${winner.member_id.images[0].image_basic.url}" alt="winner" style="width: 100%; height: auto">
+                </div>
             </div>
         `;
     }

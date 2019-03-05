@@ -7,10 +7,7 @@ export class UserService {
 
         return new Promise((resolve, reject) => {
             http.get(`${ENV.apiUrl}/public/users/get-info/${id}`)
-                .then((response) => {
-                    console.log(response);
-                    resolve(response);
-                })
+                .then((response) => resolve(response))
                 .catch((err) => reject(err));
         });
     }
@@ -20,10 +17,7 @@ export class UserService {
 
       return new Promise((resolve, reject) => {
           http.get(`${ENV.apiUrl}/public/users/my-images/${id}`)
-              .then((response) => {
-                  console.log(response);
-                  resolve(response);
-              })
+              .then((response) => resolve(response))
               .catch((err) => reject(err));
       });
     }

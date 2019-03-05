@@ -5,10 +5,12 @@ import { UserComponent } from './components/user.component';
 import { PaymentComponent } from './components/payment.component';
 import { NavbarComponent } from './components/navbar.component';
 import { NewsComponent } from './components/news.component';
+import { WinnersComponent } from './components/winners.component';
+import { SettingsComponent } from './components/settings.component';
+
 import { ActiveRoute } from './core/active.route.service';
 import { AuthGuard } from './guard/auth.guard';
 import { PaymentGuard } from './guard/payment.guard';
-import { WinnersComponent } from './components/winners.component';
 
 const activeRoute = new ActiveRoute();
 const authGuard = new AuthGuard();
@@ -17,7 +19,7 @@ const paymentGuard = new PaymentGuard();
 const routes = {
     '/':  {
       component: new HomeComponent(),
-      guard: [authGuard],
+      guard: [authGuard]
     },
     '/news': {
       component: new NewsComponent(),
@@ -27,14 +29,18 @@ const routes = {
     },
     '/users/:id': {
       component: new UserComponent(),
-      guard: [authGuard],
+      guard: [authGuard]
     },
     '/payments': {
       component: new PaymentComponent(),
-      guard: [authGuard, paymentGuard],
+      guard: [authGuard, paymentGuard]
     },
     '/winners': {
       component: new WinnersComponent(),
+    },
+    '/settings': {
+      component: new SettingsComponent(),
+      guard: [authGuard]
     },
     '**': {
       component: new NotFoundComponent()

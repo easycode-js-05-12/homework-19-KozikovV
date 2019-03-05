@@ -11,7 +11,7 @@ export class NewsComponent {
     }
 
     async beforeRender() {
-        this._news = await this._newsServise.getNews(this._authService.token);
+        this._news = await this._newsServise.getNews();
         this._newsView = this._news.map((news) => this._createNewsView(news));
     }
 

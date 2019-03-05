@@ -25,8 +25,17 @@ export class NavbarComponent {
             <a class="nav-link" href="/#/users/${this._userId}">My profile</a>
           </li>
           <li class="nav-item ml-3" >
+            <a class="nav-link" href="/#/news">News</a>
+          </li> 
+          <li class="nav-item ml-3" >
+            <a class="nav-link" href="/#/winners">Winners</a>
+          </li> 
+          <li class="nav-item ml-3" >
             <a class="nav-link" href="/#/payments">Payments</a>
-          </li>  
+          </li> 
+          <li class="nav-item ml-3" >
+            <a class="nav-link" href="/#/settings">Settings</a>
+          </li>   
         </ul>
         <button class="btn btn-primary logout-btn">Logout</button>
     </nav>
