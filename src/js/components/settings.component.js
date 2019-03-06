@@ -10,6 +10,7 @@ export class SettingsComponent {
         this._settingService = new SettingService();
 
         this._countries = null;
+        this._userCountry = null;
         this._cities = null;
         this._user = null;
         this._form = null;
@@ -64,7 +65,7 @@ export class SettingsComponent {
                             <div class="row">
                                 <div class="col-4">
                                     <select class="custom-select" name="date_of_birth_day">
-                                        <option value="1" selected>1</option>
+                                        <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
                                         <option value="4">4</option>
@@ -99,7 +100,7 @@ export class SettingsComponent {
                                 </div>
                                 <div class="col-4">
                                     <select class="custom-select" name="date_of_birth_month">
-                                        <option value="1" selected>1</option>
+                                        <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
                                         <option value="4">4</option>
@@ -134,7 +135,7 @@ export class SettingsComponent {
                         <div class="input-group mb-5">
                             <div class="row">
                                 <div class="col">
-                                    <select class="custom-select" name="gender">
+                                    <select class="custom-select" name="gender_orientation">
                                         <option value="male" selected>Male</option>
                                         <option value="female">Female</option>
                                     </select>
@@ -171,43 +172,43 @@ export class SettingsComponent {
                                 <div class="row mb-4">
                                     <div class="col-6">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="newChallenge" checked>
+                                            <input type="checkbox" class="custom-control-input" id="newChallenge" name="email_on_every_challenge">
                                             <label class="custom-control-label" for="newChallenge">Every New Challenge</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="onceWeek" checked>
+                                            <input type="checkbox" class="custom-control-input" id="onceWeek" name="email_on_new_challenges_once_week">
                                             <label class="custom-control-label" for="onceWeek">New Challenge - Once Week</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="comments" checked>
+                                            <input type="checkbox" class="custom-control-input" id="comments" name="email_on_comments">
                                             <label class="custom-control-label" for="comments">Comments</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="weeklyArticles" checked>
+                                            <input type="checkbox" class="custom-control-input" id="weeklyArticles" name="email_weekly_articles">
                                             <label class="custom-control-label" for="weeklyArticles">Weekly Articles</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="likes" checked>
+                                            <input type="checkbox" class="custom-control-input" id="likes" name="email_on_likes">
                                             <label class="custom-control-label" for="likes">Likes</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="commentsReply" checked>
+                                            <input type="checkbox" class="custom-control-input" id="commentsReply" name="email_on_comments_reply">
                                             <label class="custom-control-label" for="commentsReply">Comments Reply</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="newFollowers" checked>
+                                            <input type="checkbox" class="custom-control-input" id="newFollowers" name="email_on_new_followers">
                                             <label class="custom-control-label" for="newFollowers">New Followers</label>
                                         </div>
                                     </div>
@@ -330,6 +331,61 @@ export class SettingsComponent {
 
     afterRender() {
         this._form = document.forms['main'];
-        console.dir(this._form['email']); 
+        this._yearSelect(this._form['date_of_birth_year']);
+        this._countrySelect(this._form['country'], this._countries);
+        this._citySelect(this._userCountry, this._form['city'])
+        this._formSetValue(this._form);
+        this._form['country'].addEventListener('change', (e) => this._countrySelectChange(this._form['city'], this._form['country'].value));
+    }
+
+    _formSetValue(form) {
+        form['first_name'].value = this._user.first_name;
+        form['last_name'].value = this._user.last_name;
+        form['nickname'].value = this._user.nickname;
+        form['phone'].value = this._user.phone;
+        form['date_of_birth_day'].value = + this._user.date_of_birth_day;
+        form['date_of_birth_month'].value = + this._user.date_of_birth_month;
+        form['date_of_birth_year'].value = this._user.date_of_birth_year;
+        form['country'].value = this._userCountry;
+        form['gender_orientation'].value = this._user.gender_orientation;
+        form['email'].value = this._user.email;
+        form['email_on_every_challenge'].checked = this._user.email_on_every_challenge;
+        form['email_on_new_challenges_once_week'].checked = this._user.email_on_new_challenges_once_week;
+        form['email_on_comments'].checked = this._user.email_on_comments;
+        form['email_on_likes'].checked = this._user.email_on_likes;
+        form['email_on_comments_reply'].checked = this._user.email_on_comments_reply;
+        form['email_weekly_articles'].checked = this._user.email_weekly_articles;
+        form['email_on_new_followers'].checked = this._user.email_on_new_followers;
+    }
+
+    _yearSelect(select){
+        for(let i = 2018; i >= 1900; i--) {
+            select.insertAdjacentHTML('beforeend', `<option value="${i}">${i}</option>`);
+        }
+    }
+
+    _countrySelect(select, countries) {
+        for(let country in countries) {
+            if(this._user.country === countries[country]) {
+                this._userCountry = country;
+            }
+            select.insertAdjacentHTML('beforeend', `<option value="${country}">${countries[country]}</option>`);
+        }
+    }
+
+    async _citySelect(countryID, select){
+        this._cities = await this._settingService.getCities(countryID);
+        for(let city in this._cities) {
+            select.insertAdjacentHTML('beforeend', `<option value="${city}">${this._cities[city]}</option>`);
+            if(this._user.city === this._cities[city]) select.value = city;
+        }
+    }
+
+    async _countrySelectChange(select, countryId) {
+        this._cities = await this._settingService.getCities(countryId);
+        select.innerHTML = '';
+        for(let city in this._cities) {
+            select.insertAdjacentHTML('beforeend', `<option value="${city}">${this._cities[city]}</option>`);
+        }
     }
 }

@@ -14,7 +14,6 @@ export class SettingService {
         return new Promise((resolve, reject) => {
             this._http.get(`${ENV.apiUrl}/public/location/get-countries`)
             .then((response) => {
-                console.log(response);
                 resolve(response);
             })
             .catch((error) => reject(error));
@@ -25,7 +24,6 @@ export class SettingService {
         return new Promise((resolve, reject) => {
             this._http.get(`${ENV.apiUrl}/public/location/get-cities/${id}`)
             .then((response) => {
-                console.log(response);
                 resolve(response);
             })
             .catch((error) => reject(error));
