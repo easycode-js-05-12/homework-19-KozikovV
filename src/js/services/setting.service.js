@@ -13,9 +13,7 @@ export class SettingService {
     getCountries() {
         return new Promise((resolve, reject) => {
             this._http.get(`${ENV.apiUrl}/public/location/get-countries`)
-            .then((response) => {
-                resolve(response);
-            })
+            .then((response) => resolve(response))
             .catch((error) => reject(error));
         })
     }
@@ -23,9 +21,7 @@ export class SettingService {
     getCities(id) {
         return new Promise((resolve, reject) => {
             this._http.get(`${ENV.apiUrl}/public/location/get-cities/${id}`)
-            .then((response) => {
-                resolve(response);
-            })
+            .then((response) => resolve(response))
             .catch((error) => reject(error));
         })
     }

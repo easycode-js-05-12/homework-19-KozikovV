@@ -14,6 +14,8 @@ export class SettingsComponent {
         this._cities = null;
         this._user = null;
         this._form = null;
+        this._emailButton = null;
+        this._passwordsButtons = null;
     }
 
     async beforeRender() {
@@ -156,9 +158,9 @@ export class SettingsComponent {
                         <h6 class="mb-3">Сhange email address</h6>
                         <div class="input-group mb-4">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">@</span>
+                                <span class="input-group-text" id="emailButton">@</span>
                             </div>
-                            <input type="text" class="form-control" name="email" aria-label="Username" aria-describedby="basic-addon1" disabled>
+                            <input type="email" class="form-control" name="email" aria-label="Username" aria-describedby="basic-addon1" disabled>
                         </div>
                         <button type="button" class="btn btn-border-gradient btn-bg-light mb-3"><span class="btn-wrapper">Save</span></button>
                     </article>
@@ -217,18 +219,33 @@ export class SettingsComponent {
                             </article> 
                         </div>
                         <div class="col-12 mb-4">
-                            <article>
+                            <article class="passwordButton">
                                 <h3>CHANGE PASSWORD</h3>
                                     <div class="input-group mb-3">
                                         <div class="row">
-                                            <div class="col-12 mb-3">
-                                                <input type="password" class="form-control" placeholder="Old password">
+                                            <div class="col-12">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">@</span>
+                                                    </div>
+                                                    <input type="password" class="form-control" placeholder="Old password">
+                                                </div>
                                             </div>
                                             <div class="col-6">
-                                                <input type="password" class="form-control" placeholder="New password">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">@</span>
+                                                    </div>
+                                                    <input type="password" class="form-control" placeholder="New password">
+                                                </div>
                                             </div>
                                             <div class="col-6">
-                                                <input type="password" class="form-control" placeholder="Repeate password">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">@</span>
+                                                    </div>
+                                                    <input type="password" class="form-control" placeholder="Repeate password">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -313,6 +330,10 @@ export class SettingsComponent {
             max-width: 1200px;
             margin: 0 auto;
         }
+
+        #emailButton {
+            cursor: pointer;
+        }
         
         .custom-control-label {
             font-size: 14px;
@@ -331,11 +352,21 @@ export class SettingsComponent {
 
     afterRender() {
         this._form = document.forms['main'];
+        this._emailButton = document.querySelector('#emailButton');
+        this._passwordsButtons = document.querySelector('.passwordButton');
+        
+
         this._yearSelect(this._form['date_of_birth_year']);
         this._countrySelect(this._form['country'], this._countries);
         this._citySelect(this._userCountry, this._form['city'])
         this._formSetValue(this._form);
-        this._form['country'].addEventListener('change', (e) => this._countrySelectChange(this._form['city'], this._form['country'].value));
+
+
+        this._form['country'].addEventListener('change', (e) => this._citySelect( this._form['country'].value, this._form['city']));
+        this._emailButton.addEventListener('click', (e) => this._disabledEmail(this._form['email']));
+        this._passwordsButtons.addEventListener('mousedown', (e) => this._showPassword(e, e.target.closest('.input-group')));
+        this._passwordsButtons.addEventListener('mouseup', (e) => this._showPassword(e, e.target.closest('.input-group')))
+
     }
 
     _formSetValue(form) {
@@ -375,17 +406,29 @@ export class SettingsComponent {
 
     async _citySelect(countryID, select){
         this._cities = await this._settingService.getCities(countryID);
+        select.innerHTML = '';
         for(let city in this._cities) {
             select.insertAdjacentHTML('beforeend', `<option value="${city}">${this._cities[city]}</option>`);
             if(this._user.city === this._cities[city]) select.value = city;
         }
     }
 
-    async _countrySelectChange(select, countryId) {
-        this._cities = await this._settingService.getCities(countryId);
-        select.innerHTML = '';
-        for(let city in this._cities) {
-            select.insertAdjacentHTML('beforeend', `<option value="${city}">${this._cities[city]}</option>`);
+    _disabledEmail(emailInput) {
+        emailInput.toggleAttribute('disabled');
+    }
+
+    _showPassword(event, input) {
+        if(input === null) return;
+        if(event.type === 'mousedown') {
+            input.lastElementChild.removeAttribute('type');
+            input.lastElementChild.setAttribute('type', 'text');
+            return;
+        }
+        if(event.type === 'mouseup') {
+            input.lastElementChild.removeAttribute('type');
+            input.lastElementChild.setAttribute('type', 'password');
+            return;
         }
     }
+
 }
